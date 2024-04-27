@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon start server.js"
+    "start": "node dist/server.js",
+    "dev": "nodemon start dist/server.js",
+    "build": "tsc -w"
   },
   "dependencies": {
     "core-js": "^3.15.1",
@@ -14,6 +16,9 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/socket.io": "^3.0.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
@@ -25,6 +30,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-vue": "^7.12.1",
     "postcss": "^7.0.36",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^5.4.5"
   }
 }

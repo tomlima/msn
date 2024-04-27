@@ -1,9 +1,22 @@
-const app = require("express")();
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, { cors: { origin: "*" } });
-const PORT = 3001;
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
 
-let users = [];
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
+let users: Array<{
+  id: string;
+  name: string;
+  description: string;
+  avatar: string;
+}> = [];
 
 io.on("connection", (socket) => {
   console.log("new user connected");
@@ -55,6 +68,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log("Server is running at port 3001");
+server.listen(process.env.port || 3001, () => {
+  console.log(`App running on port ${process.env.port || 3001}`);
 });
