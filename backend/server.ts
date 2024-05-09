@@ -16,6 +16,7 @@ let users: Array<{
   name: string;
   description: string;
   avatar: string;
+  status: Number;
 }> = [];
 
 io.on("connection", (socket) => {
@@ -41,22 +42,16 @@ io.on("connection", (socket) => {
   New user was connected
   -----------------------------------------*/
   socket.on("connect_user", (user) => {
-    socket.data.userName = user.name;
-    socket.data.userDesc = user.description;
-    socket.data.userAvatar = user.avatar;
-
-    users.push({
+    const userObj = {
       id: socket.id,
       name: user.name,
       description: user.description,
       avatar: user.avatar,
-    });
+      status: user.status,
+    };
 
-    io.emit("new_user_connected", {
-      name: user.name,
-      description: user.description,
-      avatar: user.avatar,
-    });
+    users.push(userObj);
+    io.emit("new_user_connected", userObj);
   });
 
   socket.on("message", (text) => {

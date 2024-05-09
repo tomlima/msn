@@ -1,5 +1,5 @@
 <template>
-  <main class="l-main" id="main">
+  <main id="main">
     <div class="panel">
       <div class="panel__wrapper" id="contacts">
         <div class="panel__header">
@@ -123,7 +123,7 @@
     </div>
 
     <Chat />
-    <Popup v-if="this.socket" :socket="this.socket" />
+    <Popup v-if="this.socket && this.userId" :socket="this.socket" :userId="this.userId" />
   </main>
 </template>
 
@@ -139,17 +139,29 @@ export default {
       userDesc: '',
       userAvatar: '',
       userStatus: 1,
+      userId: false,
       socket: false
     }
   },
   async mounted() {
+    // Socket connection
     await this.newSocketConnection()
+
+    // Socket listeners
     this.newUserConnectedListener()
+    this.newConnectionListener()
     this.getAllUsersListener()
-    this.newUserSettings()
+
+    // Misc
     this.getAllConnectedUsers()
+    this.newUserSettings()
   },
   methods: {
+    async newConnectionListener() {
+      this.socket.on('connect', () => {
+        this.userId = this.socket.id
+      })
+    },
     async handleSubmit() {
       if (!this.message.trim()) return
     },
@@ -163,12 +175,12 @@ export default {
     },
     newUserConnectedListener() {
       this.socket.on('new_user_connected', data => {
-        this.users.push(data)
+        if (data.id && data.id !== this.userId) this.users.push(data)
       })
     },
     getAllUsersListener() {
       this.socket.on('get_all_users', users => {
-        this.users = users
+        this.users = users.filter(user => user.id !== this.userId)
       })
     },
     getAllConnectedUsers() {
@@ -181,7 +193,8 @@ export default {
       this.socket.emit('connect_user', {
         name: this.userName,
         description: this.userDesc,
-        avatar: this.userAvatar
+        avatar: this.userAvatar,
+        status: this.userStatus
       })
     }
   }
@@ -204,15 +217,11 @@ main {
 }
 .panel {
   display: flex;
-  height: 100vh;
   min-height: 306px;
-  padding: 10px;
-  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
   &__wrapper {
     background-color: #ecf6f9;
     border: thin solid #707070;
@@ -342,7 +351,7 @@ main {
   background-color: white;
   float: left;
   width: 30%;
-  min-width: 274px;
+  min-width: 450px;
   height: 100%;
   position: relative;
 }

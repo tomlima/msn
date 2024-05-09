@@ -1,5 +1,5 @@
 <template>
-  <div class="mainwindow" id="chat">
+  <div class="chat" id="chat">
     <div class="tabs">
       <button class="tabbutton">
         <img
@@ -187,12 +187,17 @@
 </template>
 
 <style lang="scss" scoped>
-.mainwindow {
+.chat {
   background-color: #ecf6f9;
   border: thin solid #707070;
   border-radius: 8px;
-
   box-shadow: 0 0 5px #00000050;
+  transform: translateY(150%);
+  transition: all 1s ease;
+  &.is--open {
+    transition: all 1s ease;
+    transform: translateY(0);
+  }
 }
 
 .aerobutton {

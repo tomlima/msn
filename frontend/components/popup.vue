@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  props: ['socket'],
+  props: ['socket', 'userId'],
   data() {
     return {
       user: {}
@@ -28,7 +28,7 @@ export default {
   mounted() {
     this.socket.on('new_user_connected', user => {
       this.user = user
-      this.openPopUp()
+      if (this.userId != user.id) this.openPopUp()
     })
   },
   methods: {
