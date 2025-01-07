@@ -20,24 +20,21 @@ let users: Array<{
 }> = [];
 
 io.on("connection", (socket) => {
-  console.log("new user connected");
   /*-------------------------------------
   User was disconnected 
   -----------------------------------------*/
-  socket.on("disconnect", (reason) => {
+  socket.on("disconnect", (reason: string) => {
     users = users.filter(function(user) {
       return user.id !== socket.id;
     });
     io.emit("get_all_users", users);
   });
-
   /*-------------------------------------
   Get all users
   -----------------------------------------*/
   socket.on("get_users", () => {
     io.emit("get_all_users", users);
   });
-
   /*-------------------------------------
   New user was connected
   -----------------------------------------*/
