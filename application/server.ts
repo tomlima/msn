@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
+import User from '../Domain/User'
 
 const app = express();
 const server = http.createServer(app);
@@ -11,13 +12,7 @@ const io = new Server(server, {
   },
 });
 
-let users: Array<{
-  id: string;
-  name: string;
-  description: string;
-  avatar: string;
-  status: Number;
-}> = [];
+let users: Array<User> = [];
 
 io.on("connection", (socket) => {
   /*-------------------------------------
@@ -25,7 +20,7 @@ io.on("connection", (socket) => {
   -----------------------------------------*/
   socket.on("disconnect", (reason: string) => {
     users = users.filter(function(user) {
-      return user.id !== socket.id;
+      return user.Id !== socket.id;
     });
     io.emit("get_all_users", users);
   });
@@ -39,15 +34,8 @@ io.on("connection", (socket) => {
   New user was connected
   -----------------------------------------*/
   socket.on("connect_user", (user) => {
-    const userObj = {
-      id: socket.id,
-      name: user.name,
-      description: user.description,
-      avatar: user.avatar,
-      status: user.status,
-    };
-
-    users.push(userObj);
+    users.push(user);
+    const userObj = new User(socket.id, user.name,user.description,user.avatar,user.status);
     io.emit("new_user_connected", userObj);
   });
 

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon start dist/server.js",
+    "start": "node Dist/server.js",
+    "dev": "nodemon start Dist/server.js",
     "build": "tsc -w"
   },
   "dependencies": {
